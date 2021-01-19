@@ -1,0 +1,16 @@
+# Environment files
+.venv/
+.vscode/
+
+# Python compiled files
+__pycache__/
+*.pyc
+
+# Downloaded data and saved models
+cache/
+
+# results files
+results/
+
+# note
+NOTE.txt
