@@ -9,7 +9,7 @@ __pycache__/
 # Downloaded data and saved models
 cache/
 
-# results files
+# Results files
 results/
 
 # note
