@@ -15,6 +15,6 @@ class Config:
     seeds: List = [770597, 600522, 416719, 306890, 201746, 156886, 929271, 247945, 5028, 436287]
     log_interval: int = 20
     save_results: bool = True
-    save_model: bool = False
+    save_model: bool = True
     data_dir: str = "./cache/data/"
     output_dir: str = "./cache/models/"

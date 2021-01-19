@@ -102,14 +102,15 @@ def create_test_loader(args, trial, test_arch, device, test_loader, test_target_
                 map_location=torch.device(device),
             )
         )
-        upan_test_loader.append(eval_expert(
-            config_args,
-            expert_idx,
-            expert,
-            device,
-            test_loader[expert_idx],
-            test_target_create_fn[expert_idx]
-        )
+        upan_test_loader.append(
+            eval_expert(
+                config_args,
+                expert_idx,
+                expert,
+                device,
+                test_loader[expert_idx],
+                test_target_create_fn[expert_idx]
+            )
         )
         del expert
     return upan_test_loader
@@ -201,12 +202,11 @@ def train_model(
     return upan, test_loss, acc
 
 
-def train_pan(args):
-
+def train_upan(args):
     use_cuda = not args.no_cuda and torch.cuda.is_available()
     device = torch.device("cuda" if use_cuda else "cpu")
 
-    # Initialize arguments based on dataset chosen
+    # Initialize arguments based on the chosen dataset
     if args.dataset == "disjoint_mnist":
         train_loaders = [
             mnist_combined_train_loader(args.batch_size),
@@ -215,8 +215,8 @@ def train_pan(args):
         args.train_expert = ["first5_mnist", "last5_mnist"]
         args.train_input_channel = [1, 1]
         args.train_output_size = 5
-        args.train_arch = ["lenet5", "lenet5"]
-        train_arch = [LeNet5, LeNet5]
+        args.train_arch = ["resnet18", "resnet18"]
+        train_arch = [ResNet18, ResNet18]
         target_create_fns = [craft_first_5_target, craft_last_5_target]
     elif args.dataset == "mnist_cifar10":
         train_loaders = [
@@ -226,8 +226,8 @@ def train_pan(args):
         args.train_expert = ["mnist", "cifar10"]
         args.train_input_channel = [1, 3]
         args.train_output_size = 10
-        args.train_arch = ["lenet5", "resnet18"]
-        train_arch = [LeNet5, ResNet18]
+        args.train_arch = ["resnet18", "resnet18"]
+        train_arch = [ResNet18, ResNet18]
         target_create_fns = [craft_mnist_target, craft_cifar10_target]
     elif args.dataset == "fmnist_kmnist":
         train_loaders = [
@@ -250,8 +250,8 @@ def train_pan(args):
         args.test_expert = ["first5_mnist", "last5_mnist"]
         args.test_input_channel = [1, 1]
         args.test_output_size = 5
-        args.test_arch = ["lenet5", "lenet5"]
-        test_arch = [LeNet5, LeNet5]
+        args.test_arch = ["resnet18", "resnet18"]
+        test_arch = [ResNet18, ResNet18]
         test_target_create_fns = [craft_first_5_target, craft_last_5_target]
     elif args.testset == "mnist_cifar10":
         test_loaders = [
@@ -261,8 +261,8 @@ def train_pan(args):
         args.test_expert = ["mnist", "cifar10"]
         args.test_input_channel = [1, 3]
         args.test_output_size = 10
-        args.test_arch = ["lenet5", "resnet18"]
-        test_arch = [LeNet5, ResNet18]
+        args.test_arch = ["resnet18", "resnet18"]
+        test_arch = [ResNet18, ResNet18]
         test_target_create_fns = [craft_mnist_target, craft_cifar10_target]
     elif args.testset == "fmnist_kmnist":
         test_loaders = [
@@ -298,6 +298,7 @@ def train_pan(args):
         np.random.seed(args.seeds[i])
         torch.manual_seed(args.seeds[i])
 
+        # Train UPAN model
         upan, upan_test_loss, upan_acc = train_model(
             upan=upan_arch(input_size=upan_input_size).to(device),
             trial=i,
@@ -311,7 +312,7 @@ def train_pan(args):
             config_args=args,
         )
 
-        # Save the upan model
+        # Save the UPAN model
         torch.save(
             upan.state_dict(),
             args.output_dir
@@ -372,4 +373,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
     args.seeds = SEEDS
 
-    train_pan(args)
+    train_upan(args)

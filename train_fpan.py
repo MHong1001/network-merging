@@ -212,11 +212,10 @@ def train_model(fpan, trial, device, expert_arch, train_loader, test_loader, tar
 
 
 def train_fpan(args):
-
     use_cuda = not args.no_cuda and torch.cuda.is_available()
     device = torch.device("cuda" if use_cuda else "cpu")
 
-    # Initialize arguments based on dataset chosen
+    # Initialize arguments based on the chosen dataset
     if args.fpan_data == "disjoint_mnist":
         train_loaders = [
             mnist_combined_train_loader_noshuffle(args.batch_size),
@@ -226,8 +225,8 @@ def train_fpan(args):
         args.expert = ["first5_mnist", "last5_mnist"]
         args.expert_input_channel = [1, 1]
         args.expert_output_size = 5
-        args.expert_arch = ["lenet5", "lenet5"]
-        expert_arch = [LeNet5, LeNet5]
+        args.expert_arch = ["resnet18", "resnet18"]
+        expert_arch = [ResNet18, ResNet18]
         target_create_fns = craft_disjoint_mnist_target
         fpan_output_size = 2
         fpan_input_channel = 1
@@ -240,8 +239,8 @@ def train_fpan(args):
         args.expert = ["mnist", "cifar10"]
         args.expert_input_channel = [1, 3]
         args.expert_output_size = 10
-        args.expert_arch = ["lenet5", "resnet18"]
-        expert_arch = [LeNet5, ResNet18]
+        args.expert_arch = ["resnet18", "resnet18"]
+        expert_arch = [ResNet18, ResNet18]
         target_create_fns = craft_mnist_cifar10_target
         fpan_output_size = 2
         fpan_input_channel = 1
@@ -269,10 +268,10 @@ def train_fpan(args):
 
     # Initialize arguments based on dataset chosen
     if args.upan_data == "disjoint_mnist":
-        args.model_arch = ["lenet5", "lenet5"]
+        args.model_arch = ["resnet18", "resnet18"]
         args.model_output_size = 5
     elif args.upan_data == "mnist_cifar10":
-        args.model_arch = ["lenet5", "resnet18"]
+        args.model_arch = ["resnet18", "resnet18"]
         args.model_output_size = 10
     elif args.upan_data == "fmnist_kmnist":
         args.model_arch = ["resnet18", "resnet18"]
@@ -293,9 +292,9 @@ def train_fpan(args):
         np.random.seed(args.seeds[i])
         torch.manual_seed(args.seeds[i])
 
+        # Train FPAN model
         fpan, fpan_test_loss, fpan_acc = train_model(
-            fpan=fpan_arch(input_channel=fpan_input_channel,
-                           output_size=fpan_output_size).to(device),
+            fpan=fpan_arch(input_channel=fpan_input_channel, output_size=fpan_output_size).to(device),
             trial=i,
             device=device,
             expert_arch=expert_arch,
@@ -305,7 +304,7 @@ def train_fpan(args):
             config_args=args,
         )
 
-        # Save the fpan model
+        # Save the FPAN model
         torch.save(
             fpan.state_dict(),
             args.output_dir
