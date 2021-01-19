@@ -12,8 +12,5 @@ cache/
 # results files
 results/
 
-# git ignore
-.gitignore
-
 # note
 NOTE.txt
