@@ -293,7 +293,7 @@ def train_upan(args):
 
     upan_results = []
     for i in range(len(args.seeds)):
-        print(f"Iteration {i}, Seed {args.seeds[i]}")
+        print(f"Iteration {i+1}, Seed {args.seeds[i]}")
 
         np.random.seed(args.seeds[i])
         torch.manual_seed(args.seeds[i])
