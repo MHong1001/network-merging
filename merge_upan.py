@@ -21,9 +21,9 @@ def main(args):
 
     # Initialize arguments based on dataset chosen
     if args.dataset == "disjoint_mnist":
-        args.arch = ["lenet5", "lenet5"]
+        args.arch = ["resnet18", "resnet18"]
     elif args.dataset == "mnist_cifar10":
-        args.arch = ["lenet5", "resnet18"]
+        args.arch = ["resnet18", "resnet18"]
 
     # Initialize arguments based on testset chosen
     if args.testset == "disjoint_mnist":
@@ -33,10 +33,10 @@ def main(args):
         args.m1_input_channel = 1
         args.m2_input_channel = 1
         args.output_size = 5
-        args.arch1 = "lenet5"
-        args.arch2 = "lenet5"
-        arch1 = LeNet5
-        arch2 = LeNet5
+        args.arch1 = "resnet18"
+        args.arch2 = "resnet18"
+        arch1 = ResNet18
+        arch2 = ResNet18
         m = mnist
     elif args.testset == "mnist_cifar10":
         test_loader = [
@@ -48,9 +48,9 @@ def main(args):
         args.m1_input_channel = 1
         args.m2_input_channel = 3
         args.output_size = 10
-        args.arch1 = "lenet5"
+        args.arch1 = "resnet18"
         args.arch2 = "resnet18"
-        arch1 = LeNet5
+        arch1 = ResNet18
         arch2 = ResNet18
         m = mnist_cifar10
     elif args.testset == "fmnist_kmnist":
