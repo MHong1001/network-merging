@@ -54,7 +54,6 @@ def eval_expert(args, expert_idx, expert, device, data_loader, target_create_fn)
 def create_train_loader(args, trial, train_arch, device, train_loader, target_create_fn, config_args):
     # Feed data to each expert, return training set of upan
     print("Obtaining UPAN training set:")
-    all_train_data = []
     for expert_idx in range(len(train_arch)):
         # Load expert
         expert = train_arch[expert_idx](
@@ -77,6 +76,7 @@ def create_train_loader(args, trial, train_arch, device, train_loader, target_cr
         )
 
         # Slice dataset into smallest unit
+        all_train_data = []
         temp_train_data = []
         for output, upan_target in train_data:
             for idx in range(len(output)):
@@ -119,7 +119,7 @@ def create_test_loader(args, trial, test_arch, device, test_loader, test_target_
 def train(args, upan, upan_train_loader, optimizer, epoch):
     # Use the collected training set to train upan
     upan.train()
-    num_data = sum(len(data) for data, target in upan_train_loader)
+    total_data = sum(len(data) for data, target in upan_train_loader)
     for batch_idx, (data, pan_target) in enumerate(upan_train_loader):
         if args.upan_type == "feature" or args.upan_type == "logits":
             output = upan(data)
@@ -136,8 +136,8 @@ def train(args, upan, upan_train_loader, optimizer, epoch):
                 "Train UPAN Epoch: {} [{}/{} ({:.0f}%)]\tLoss: {:.6f}".format(
                     epoch,
                     batch_idx * len(data),
-                    num_data,
-                    100.0 * batch_idx * len(data) / num_data,
+                    total_data,
+                    100.0 * batch_idx * len(data) / total_data,
                     loss.item(),
                 )
             )
@@ -174,10 +174,10 @@ def test(args, device, upan, upan_test_loader):
         model_target = torch.nonzero(model_target, as_tuple=True)[1]
 
         correct = model_pred.eq(model_target).sum().item()
-        num_data = len(model_pred)
+        total_data = len(model_pred)
 
-    acc = 100.0 * correct / num_data
-    print("\nTest set: Accuracy: {}/{} ({:.0f}%)".format(correct, num_data, acc))
+    acc = 100.0 * correct / total_data
+    print("\nTest set: Accuracy: {}/{} ({:.0f}%)".format(correct, total_data, acc))
     return test_loss, acc
 
 
