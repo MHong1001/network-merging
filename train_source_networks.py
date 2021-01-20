@@ -86,9 +86,7 @@ def train_model(model, device, train_loader, test_loader, config_args):
 
 
 def train_main(args):
-
     use_cuda = not args.no_cuda and torch.cuda.is_available()
-
     device = torch.device("cuda" if use_cuda else "cpu")
 
     # Initialize arguments based on dataset chosen
@@ -139,7 +137,7 @@ def train_main(args):
     results = []
 
     for i in range(len(args.seeds)):
-        print(f"Iteration {i}, Seed {args.seeds[i]}")
+        print(f"Iteration {i+1}, Seed {args.seeds[i]}")
 
         np.random.seed(args.seeds[i])
         torch.manual_seed(args.seeds[i])
@@ -158,7 +156,7 @@ def train_main(args):
             args.output_dir + f"{args.dataset}_{args.arch}_{args.seeds[i]}",
         )
 
-        # save the results in list first
+        # Save the results in list first
         results.append(
             {"iteration": i, "seed": args.seeds[i], "loss": test_loss, "acc": acc}
         )

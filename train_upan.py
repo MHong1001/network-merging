@@ -25,17 +25,17 @@ import time
 
 def eval_expert(args, expert_idx, expert, device, data_loader, target_create_fn):
     expert.eval()
-    pan_dataset = []    # Collect output and its target
+    upan_dataset = []    # Collect output of expert and target for UPAN
     total_data = sum(len(data) for data, target in data_loader)
     for batch_idx, (data, target) in enumerate(data_loader):
         data, target = data.to(device), target.to(device)
-        logits = expert(data, out_feature=False)
-        upan_target = target_create_fn(target).to(device)
+        logits = expert(data, out_feature=False)    # Output logits of expert
+        upan_target = target_create_fn(target).to(device)   # Target for UPAN
 
         if args.upan_type == "logits" or args.upan_type == "agnostic_logits":
-            pan_dataset.append((logits.detach(), upan_target))
+            upan_dataset.append((logits.detach(), upan_target))
         else:
-            raise NotImplementedError("Not an eligible pan type.")
+            raise NotImplementedError("Not an eligible upan type.")
         del logits
 
         if batch_idx % args.log_interval == 0:
@@ -48,7 +48,7 @@ def eval_expert(args, expert_idx, expert, device, data_loader, target_create_fn)
                 )
             )
     del expert, data_loader
-    return pan_dataset
+    return upan_dataset
 
 
 def create_train_loader(args, trial, train_arch, device, train_loader, target_create_fn, config_args):
@@ -186,17 +186,16 @@ def train_model(
 ):
     optimizer = optim.SGD(upan.parameters(), lr=config_args.lr, momentum=config_args.momentum)
 
-    pan_train_loader = create_train_loader(
-        args, trial, train_arch, device, train_loader, target_create_fn, config_args)
-    pan_test_loader = create_test_loader(
-        args, trial, test_arch, device, test_loader, test_target_create_fn, config_args)
+    # Initialise dataloaders of UPAN
+    upan_train_loader = create_train_loader(args, trial, train_arch, device, train_loader, target_create_fn, config_args)
+    upan_test_loader = create_test_loader(args, trial, test_arch, device, test_loader, test_target_create_fn, config_args)
 
     for epoch in range(1, config_args.epochs + 1):
         start_time = time.time()
         # Train upan
-        train(args, upan, pan_train_loader, optimizer, epoch)
+        train(args, upan, upan_train_loader, optimizer, epoch)
         # Test upan
-        test_loss, acc = test(config_args, device, upan, pan_test_loader)
+        test_loss, acc = test(config_args, device, upan, upan_test_loader)
         print('Time taken: {}.\n'.format(time.time() - start_time))
 
     return upan, test_loss, acc

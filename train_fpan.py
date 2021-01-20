@@ -25,12 +25,12 @@ import time
 
 def eval_expert(args, expert_idx, expert, device, data_loader):
     expert.eval()
-    expert_output = []
-    num_data = sum(len(data) for data, target in data_loader)
+    expert_output = []  # Collect output logits of expert
+    total_data = sum(len(data) for data, target in data_loader)
     for batch_idx, (data, target) in enumerate(data_loader):
         data, target = data.to(device), target.to(device)
 
-        logits = expert(data, out_feature=False)
+        logits = expert(data, out_feature=False)    # Output logits of expert
         expert_output.append(logits.detach())
         del logits
 
@@ -39,8 +39,8 @@ def eval_expert(args, expert_idx, expert, device, data_loader):
                 "Eval Expert: {} [{}/{} ({:.0f}%)]".format(
                     expert_idx + 1,
                     batch_idx * len(data),
-                    num_data,
-                    100.0 * batch_idx * len(data) / num_data,
+                    total_data,
+                    100.0 * batch_idx * len(data) / total_data,
                 )
             )
     return expert_output
@@ -197,6 +197,7 @@ def train_model(fpan, trial, device, expert_arch, train_loader, test_loader, tar
         )
     )
 
+    # Initialise dataloaders of FPAN
     fpan_train_loader = create_train_loader(args, device, experts, upan, train_loader)
     fpan_test_loader = create_test_loader(args, device, test_loader, target_create_fn)
 
