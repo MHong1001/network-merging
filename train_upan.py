@@ -241,7 +241,7 @@ def train_upan(args):
         train_arch = [ResNet18, ResNet18]
         target_create_fns = [craft_fmnist_target, craft_kmnist_target]
 
-    # Initialize arguments based on testset chosen
+    # Initialize arguments based on the chosen testset 
     if args.testset == "disjoint_mnist":
         test_loaders = [
             mnist_combined_test_loader(args.test_batch_size),
@@ -319,7 +319,7 @@ def train_upan(args):
             + f"(experiment)upan_{args.upan_type}_{args.dataset}{args.train_arch}_{args.seeds[i]}",
         )
 
-        # save the results in list first
+        # Save the results in list first
         upan_results.append(
             {
                 "iteration": i,

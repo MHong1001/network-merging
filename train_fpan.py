@@ -266,7 +266,7 @@ def train_fpan(args):
     elif args.fpan_arch == "lenet5_halfed":
         fpan_arch = LeNet5Halfed
 
-    # Initialize arguments based on dataset chosen
+    # Initialize arguments based on the dataset that UPAN was trained on
     if args.upan_data == "disjoint_mnist":
         args.model_arch = ["resnet18", "resnet18"]
         args.model_output_size = 5
@@ -311,7 +311,7 @@ def train_fpan(args):
             + f"fpan_{args.fpan_data}({fpan_input_channel})_({args.upan_data}_{args.upan_type}){args.seeds[i]}",
         )
 
-        # save the results in list first
+        # Save the results in list first
         fpan_results.append(
             {
                 "iteration": i,
