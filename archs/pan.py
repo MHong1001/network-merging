@@ -9,7 +9,7 @@ class PAN(nn.Module):
         self.relu1 = nn.ReLU()
         self.fc2 = nn.Linear(80, 60)
         self.relu2 = nn.ReLU()
-        self.fc3 = nn.Linear(60, 2)
+        self.fc3 = nn.Linear(60, 1)
 
     def forward(self, data, out_feature=False):
         output = self.fc1(data)
@@ -29,7 +29,7 @@ class AgnosticPAN(nn.Module):
         self.relu2 = nn.ReLU()
         self.fc3 = nn.Linear(50, 20)
         self.relu3 = nn.ReLU()
-        self.fc4 = nn.Linear(20, 2)
+        self.fc4 = nn.Linear(20, 1)
 
     def forward(self, data, out_feature=False):
         output = self.fc1(data)
@@ -52,12 +52,12 @@ def compute_agnostic_stats(data):
         result = t.view(-1).kthvalue(k).values.item()
         return result
 
-    # third_q = []
-    # for n in range(len(data)):
-    #     third_q.append(percentile(data[n], 75))
-    # third_q = torch.tensor(third_q).to("cuda")
+    third_q = []
+    for n in range(len(data)):
+        third_q.append(percentile(data[n], 75))
+    third_q = torch.tensor(third_q).to("cuda")
 
-    min = torch.min(data, dim=1)[0]
+    # min = torch.min(data, dim=1)[0]
 
-    res = torch.stack([mean, std, maximum, min], dim=1)
+    res = torch.stack([mean, std, maximum, third_q], dim=1)
     return res
