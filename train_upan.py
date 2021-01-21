@@ -29,8 +29,8 @@ def eval_expert(args, expert_idx, expert, device, data_loader, target_create_fn)
     total_data = sum(len(data) for data, target in data_loader)
     for batch_idx, (data, target) in enumerate(data_loader):
         data, target = data.to(device), target.to(device)
-        logits = expert(data, out_feature=False)    # Output logits of expert
-        upan_target = target_create_fn(target).to(device)   # Target for UPAN
+        logits = expert(data, out_feature=False)    # output logits of expert
+        upan_target = target_create_fn(target).to(device)   # target for UPAN
 
         if args.upan_type == "logits" or args.upan_type == "agnostic_logits":
             upan_dataset.append((logits.detach(), upan_target))
@@ -277,10 +277,10 @@ def train_upan(args):
 
     # Initialize UPAN based on its type
     if args.upan_type == "logits":
-        upan_input_size = args.train_output_size
+        upan_input_size = args.train_output_size # output size of expert
         upan_arch = PAN
     elif args.upan_type == "agnostic_logits":
-        upan_input_size = 4
+        upan_input_size = 4 # number of statistical functions used
         upan_arch = AgnosticPAN
 
     # Create the directory for saving if it does not exist

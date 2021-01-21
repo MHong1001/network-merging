@@ -25,12 +25,12 @@ import time
 
 def eval_expert(args, expert_idx, expert, device, data_loader):
     expert.eval()
-    expert_output = []  # Collect output logits of expert
+    expert_output = []  # collect output logits of expert
     total_data = sum(len(data) for data, target in data_loader)
     for batch_idx, (data, target) in enumerate(data_loader):
         data, target = data.to(device), target.to(device)
 
-        logits = expert(data, out_feature=False)    # Output logits of expert
+        logits = expert(data, out_feature=False)    # output logits of expert
         expert_output.append(logits.detach())
         del logits
 
