@@ -54,6 +54,7 @@ def eval_expert(args, expert_idx, expert, device, data_loader, target_create_fn)
 def create_train_loader(args, trial, train_arch, device, train_loader, target_create_fn, config_args):
     # Feed data to each expert, return training set of upan
     print("Obtaining UPAN training set:")
+    all_train_data = []
     for expert_idx in range(len(train_arch)):
         # Load expert
         expert = train_arch[expert_idx](
@@ -76,7 +77,6 @@ def create_train_loader(args, trial, train_arch, device, train_loader, target_cr
         )
 
         # Slice dataset into smallest unit
-        all_train_data = []
         temp_train_data = []
         for output, upan_target in train_data:
             for idx in range(len(output)):
