@@ -102,6 +102,8 @@ def create_test_loader(args, trial, test_arch, device, test_loader, test_target_
                 map_location=torch.device(device),
             )
         )
+
+        # Directly append output of expert (not slicing into smallest unit)
         upan_test_loader.append(
             eval_expert(
                 config_args,
@@ -145,32 +147,44 @@ def train(args, upan, upan_train_loader, optimizer, epoch):
 
 def test(args, device, upan, upan_test_loader):
     upan.eval()
-    test_loss = 0   # Not being used
+    test_loss = "N/A"   # Not being used
     with torch.no_grad():
         model_pred = []
         model_target = []
-        for model_data in upan_test_loader:
+        for expert_data in upan_test_loader:
             upan_output = []
             upan_target = []
-            for data, target in model_data:
+            for logits, target in expert_data:
                 if args.upan_type == "logits":
-                    output = upan(data)
+                    output = upan(logits)
                 elif args.upan_type == "agnostic_logits":
-                    output = upan(compute_agnostic_stats(data))
+                    output = upan(compute_agnostic_stats(logits))
                 output = F.log_softmax(output, dim=-1)
                 upan_output.append(output)
                 upan_target.append(target)
 
+            # Concatenate batches of UPAN outputs and targets
             upan_output = torch.cat(upan_output)
+            upan_target = torch.cat(upan_target)
+
+            # Extract the output of UPAN (ie. probability of the expert truly belonging to the input data)
             upan_output = torch.index_select(upan_output, 1, torch.tensor(1).to(device))
             upan_output = torch.flatten(upan_output)
-            upan_target = torch.cat(upan_target)
+
+            # Append UPAN output and target for this expert
             model_pred.append(upan_output)
             model_target.append(upan_target)
 
+        print(model_pred) # contain upan output of expert1, expert2
+        # Concatenate UPAN prediction on different experts when given the same input data
         model_pred = torch.stack(model_pred, dim=1)
+        # Extract index of element that has the highest probability (represents the expert chosen by UPAN)
         model_pred = torch.argmax(model_pred, dim=1)
+
+        print(model_target)
+        # Concatenate UPAN target on different experts when given the same input data
         model_target = torch.stack(model_target, dim=1)
+        # Extract index of element that is the true target (represent the correct expert)
         model_target = torch.nonzero(model_target, as_tuple=True)[1]
 
         correct = model_pred.eq(model_target).sum().item()
@@ -331,7 +345,7 @@ def train_upan(args):
     # Save all the results
     if args.save_results:
         save_results(
-            f"(experiment)upan_{args.upan_type}_{args.dataset}{args.train_arch}_{args.testset}{args.test_arch}",
+            f"upan_{args.upan_type}_{args.dataset}{args.train_arch}_{args.testset}{args.test_arch}",
             upan_results,
             args.results_dir,
         )
