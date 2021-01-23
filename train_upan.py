@@ -175,16 +175,14 @@ def test(args, device, upan, upan_test_loader):
             model_pred.append(upan_output)
             model_target.append(upan_target)
 
-        print(model_pred) # contain upan output of expert1, expert2
-        # Concatenate UPAN prediction on different experts when given the same input data
+        # Concatenate UPAN predictions on different experts when given the same input data
         model_pred = torch.stack(model_pred, dim=1)
         # Extract index of element that has the highest probability (represents the expert chosen by UPAN)
         model_pred = torch.argmax(model_pred, dim=1)
 
-        print(model_target)
-        # Concatenate UPAN target on different experts when given the same input data
+        # Concatenate UPAN targets on different experts when given the same input data
         model_target = torch.stack(model_target, dim=1)
-        # Extract index of element that is the true target (represent the correct expert)
+        # Extract index of element that represents the true target (represent the correct expert)
         model_target = torch.nonzero(model_target, as_tuple=True)[1]
 
         correct = model_pred.eq(model_target).sum().item()
