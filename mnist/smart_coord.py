@@ -23,7 +23,7 @@ def craft_last_5_target(target):
     pan_target = torch.stack(pan_target, 0)
     return pan_target
 
-# Create target for fpan
+# Create for fpan target
 def craft_disjoint_mnist_target(target):
     pan_target = [0] * len(target)
     for i in range(len(pan_target)):
