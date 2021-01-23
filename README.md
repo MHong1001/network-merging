@@ -10,7 +10,6 @@ The software is running with the current libraries, do remember to install them 
 - Python 3.7 and above
 - pytorch 1.4.0
 - torchvision 0.5.0
-- imgaug 0.2.6
 - Pillow 7.0.0
 
 ## Training base networks
