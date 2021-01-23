@@ -25,7 +25,7 @@ import time
 
 def eval_expert(args, expert_idx, expert, device, data_loader, target_create_fn):
     expert.eval()
-    upan_dataset = []    # Collect output of expert and target for UPAN
+    upan_dataset = []    # collect output of expert and target for UPAN
     total_data = sum(len(data) for data, target in data_loader)
     for batch_idx, (data, target) in enumerate(data_loader):
         data, target = data.to(device), target.to(device)
@@ -76,7 +76,7 @@ def create_train_loader(args, trial, train_arch, device, train_loader, target_cr
             target_create_fn[expert_idx]
         )
 
-        # Slice dataset into smallest unit
+        # Slice dataset into the smallest unit
         temp_train_data = []
         for output, upan_target in train_data:
             for idx in range(len(output)):
@@ -177,12 +177,12 @@ def test(args, device, upan, upan_test_loader):
 
         # Concatenate UPAN predictions on different experts when given the same input data
         model_pred = torch.stack(model_pred, dim=1)
-        # Extract index of element that has the highest probability (represents the expert chosen by UPAN)
+        # Extract index of the max log-probability (represents the expert chosen by UPAN)
         model_pred = torch.argmax(model_pred, dim=1)
 
         # Concatenate UPAN targets on different experts when given the same input data
         model_target = torch.stack(model_target, dim=1)
-        # Extract index of element that represents the true target (represent the correct expert)
+        # Extract index of the true target (represent the correct expert)
         model_target = torch.nonzero(model_target, as_tuple=True)[1]
 
         correct = model_pred.eq(model_target).sum().item()

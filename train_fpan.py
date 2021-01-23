@@ -46,10 +46,10 @@ def eval_expert(args, expert_idx, expert, device, data_loader):
     return expert_output
 
 
-def eval_upan(args, upan, experts_output, device):
+def eval_upan(args, upan, all_experts_output, device):
     upan.eval()
     fpan_target = []
-    for expert_output in experts_output:
+    for expert_output in all_experts_output:
         upan_output = []
         for logits in expert_output:
             if args.upan_type == "logits":
@@ -59,26 +59,29 @@ def eval_upan(args, upan, experts_output, device):
             output = F.log_softmax(output, dim=-1)
             upan_output.append(output)
 
+        # Concatenate batches of UPAN outputs
         upan_output = torch.cat(upan_output)
+        # Extract the output of UPAN (ie. probability of the expert truly belonging to the input data)
         upan_output = torch.index_select(upan_output, 1, torch.tensor([1]).to(device))
         upan_output = torch.flatten(upan_output)
         fpan_target.append(upan_output)
 
+    # Concatenate UPAN predictions on different experts when given the same input data
     fpan_target = torch.stack(fpan_target, dim=1)
+    # Extract index of the max log-probability (represents the expert chosen by UPAN)
     fpan_target = torch.argmax(fpan_target, dim=1)
     return fpan_target
 
 
 def create_train_loader(args, device, experts, upan, train_loader):
     print("Obtaining FPAN training set:")
-    # Using input of the first loader as input of FPAN
+    # Using input data of the first dataloader as input data of FPAN
     fpan_input = []
     for data, target in train_loader[0]:
-        data, target = data.to(device), target.to(device)
-        fpan_input.append(data)
+        fpan_input.append(data.to(device))
     fpan_input = torch.cat(fpan_input)
 
-    # Feed data to each experts to collect their outputs
+    # Feed data to each expert to collect their output logits
     all_experts_output = []
     for expert_idx, expert in enumerate(experts):
         expert_output = eval_expert(
@@ -90,13 +93,13 @@ def create_train_loader(args, device, experts, upan, train_loader):
         )
         all_experts_output.append(expert_output)
 
-    # UPAN selects expert according to their outputs
+    # UPAN selects an expert as the target of FPAN
     fpan_target = eval_upan(args, upan, all_experts_output, device)
 
-    # Slice dataset into smallest unit
+    # Slice dataset into the smallest unit
     fpan_train_data = []
     for idx in range(len(fpan_input)):
-        fpan_train_data.append([fpan_input[idx], fpan_target[idx]])
+        fpan_train_data.append((fpan_input[idx], fpan_target[idx]))
 
     return DataLoader(fpan_train_data, batch_size=args.batch_size, shuffle=True)
 
@@ -105,6 +108,7 @@ def create_test_loader(args, device, test_loader, target_create_fn):
     print("Obtaining FPAN test set:")
     fpan_input = []
     fpan_target = []
+    # Using input data of the test loader as input data of FPAN, and generate target for testing
     for data, target in test_loader:
         fpan_input.append(data.to(device))
         fpan_target.append(target_create_fn(target.to(device)).to(device))
