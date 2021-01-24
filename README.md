@@ -47,17 +47,17 @@ Note that this should only be ran after the base network has already been traine
 For the experiments, the following command was used:
 
 ```bash
-python train_upan.py --dataset=disjoint_mnist –-testset=disjoint_mnist --upan_type=logits
-python train_upan.py --dataset=mnist_cifar10 –-testset=mnist_cifar10 --upan_type=logits
-python train_upan.py --dataset=mnist_cifar10 –-testset=fmnist_kmnist --upan_type=logits
+python train_upan.py --dataset=disjoint_mnist --testset=disjoint_mnist --upan_type=logits
+python train_upan.py --dataset=mnist_cifar10 --testset=mnist_cifar10 --upan_type=logits
+python train_upan.py --dataset=mnist_cifar10 --testset=fmnist_kmnist --upan_type=logits
 
-python train_upan.py --dataset=disjoint_mnist –-testset=disjoint_mnist --upan_type=agnostic_logits
-python train_upan.py --dataset=disjoint_mnist –-testset=mnist_cifar10 --upan_type=agnostic_logits
-python train_upan.py --dataset=disjoint_mnist –-testset=fmnist_kmnist --upan_type=agnostic_logits
+python train_upan.py --dataset=disjoint_mnist --testset=disjoint_mnist --upan_type=agnostic_logits
+python train_upan.py --dataset=disjoint_mnist --testset=mnist_cifar10 --upan_type=agnostic_logits
+python train_upan.py --dataset=disjoint_mnist --testset=fmnist_kmnist --upan_type=agnostic_logits
 
-python train_upan.py --dataset=mnist_cifar10 –-testset=disjoint_mnist --upan_type=agnostic_logits
-python train_upan.py --dataset=mnist_cifar10 –-testset=mnist_cifar10 --upan_type=agnostic_logits
-python train_upan.py --dataset=mnist_cifar10 –-testset=fmnist_kmnist --upan_type=agnostic_logits
+python train_upan.py --dataset=mnist_cifar10 --testset=disjoint_mnist --upan_type=agnostic_logits
+python train_upan.py --dataset=mnist_cifar10 --testset=mnist_cifar10 --upan_type=agnostic_logits
+python train_upan.py --dataset=mnist_cifar10 --testset=fmnist_kmnist --upan_type=agnostic_logits
 ```
 
 Here, agnostic logits refers to the logits based activation statistics based upan.
