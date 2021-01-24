@@ -327,7 +327,7 @@ def train_upan(args):
         torch.save(
             upan.state_dict(),
             args.output_dir
-            + f"(experiment)upan_{args.upan_type}_{args.dataset}{args.train_arch}_{args.seeds[i]}",
+            + f"upan_{args.upan_type}_{args.dataset}{args.train_arch}_{args.seeds[i]}",
         )
 
         # Save the results in list first
