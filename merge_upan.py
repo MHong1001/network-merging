@@ -74,7 +74,7 @@ def main(args):
         upan_input_size = args.output_size
         upan_arch = PAN
     elif args.upan_type == "agnostic_logits":
-        upan_input_size = 3
+        upan_input_size = 4
         upan_arch = AgnosticPAN
 
     # Running the test
