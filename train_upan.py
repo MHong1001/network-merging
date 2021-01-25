@@ -123,9 +123,9 @@ def train(args, upan, upan_train_loader, optimizer, epoch):
     upan.train()
     total_data = sum(len(data) for data, target in upan_train_loader)
     for batch_idx, (data, upan_target) in enumerate(upan_train_loader):
-        if args.upan_type == "feature" or args.upan_type == "logits":
+        if args.upan_type == "logits":
             output = upan(data)
-        elif args.upan_type == "agnostic_feature" or args.upan_type == "agnostic_logits":
+        elif args.upan_type == "agnostic_logits":
             output = upan(compute_agnostic_stats(data))
 
         optimizer.zero_grad()
