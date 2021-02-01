@@ -47,17 +47,20 @@ def compute_agnostic_stats(data):
     std = torch.std(data, dim=1)
     maximum = torch.max(data, dim=1)[0]
 
-    def percentile(t: torch.tensor, q: float):
-        k = 1 + round(0.01 * float(q) * (t.numel() - 1))
-        result = t.view(-1).kthvalue(k).values.item()
-        return result
+    # def percentile(t: torch.tensor, q: float):
+    #     k = 1 + round(0.01 * float(q) * (t.numel() - 1))
+    #     result = t.view(-1).kthvalue(k).values.item()
+    #     return result
 
     # third_q = []
     # for n in range(len(data)):
     #     third_q.append(percentile(data[n], 75))
     # third_q = torch.tensor(third_q).to("cuda")
 
-    min = torch.min(data, dim=1)[0]
+    minimum = torch.min(data, dim=1)[0]
+    # median = torch.median(data, dim=1)[0]
+    # range1 = maximum-minimum
+    # range2 = maximum-median
 
-    res = torch.stack([mean, std, maximum, min], dim=1)
+    res = torch.stack([mean, std, maximum, minimum], dim=1)
     return res
