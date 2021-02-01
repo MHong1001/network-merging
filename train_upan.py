@@ -115,6 +115,9 @@ def create_test_loader(args, trial, test_arch, device, test_loader, test_target_
             )
         )
         del expert
+
+        print(upan_test_loader[expert_idx][-1:])
+
     return upan_test_loader
 
 
@@ -226,8 +229,8 @@ def train_upan(args):
         args.train_expert = ["first5_mnist", "last5_mnist"]
         args.train_input_channel = [1, 1]
         args.train_output_size = 5
-        args.train_arch = ["resnet18", "resnet18"]
-        train_arch = [ResNet18, ResNet18]
+        args.train_arch = ["lenet5", "lenet5"]
+        train_arch = [LeNet5, LeNet5]
         target_create_fns = [craft_first_5_target, craft_last_5_target]
     elif args.dataset == "mnist_cifar10":
         train_loaders = [
@@ -238,7 +241,7 @@ def train_upan(args):
         args.train_input_channel = [1, 3]
         args.train_output_size = 10
         args.train_arch = ["resnet18", "resnet18"]
-        train_arch = [ResNet18, ResNet18]
+        train_arch = [LeNet5, ResNet18]
         target_create_fns = [craft_mnist_target, craft_cifar10_target]
     elif args.dataset == "fmnist_kmnist":
         train_loaders = [
@@ -261,8 +264,8 @@ def train_upan(args):
         args.test_expert = ["first5_mnist", "last5_mnist"]
         args.test_input_channel = [1, 1]
         args.test_output_size = 5
-        args.test_arch = ["resnet18", "resnet18"]
-        test_arch = [ResNet18, ResNet18]
+        args.test_arch = ["lenet5", "lenet5"]
+        test_arch = [LeNet5, LeNet5]
         test_target_create_fns = [craft_first_5_target, craft_last_5_target]
     elif args.testset == "mnist_cifar10":
         test_loaders = [
@@ -272,8 +275,8 @@ def train_upan(args):
         args.test_expert = ["mnist", "cifar10"]
         args.test_input_channel = [1, 3]
         args.test_output_size = 10
-        args.test_arch = ["resnet18", "resnet18"]
-        test_arch = [ResNet18, ResNet18]
+        args.test_arch = ["lenet5", "resnet18"]
+        test_arch = [LeNet5, ResNet18]
         test_target_create_fns = [craft_mnist_target, craft_cifar10_target]
     elif args.testset == "fmnist_kmnist":
         test_loaders = [

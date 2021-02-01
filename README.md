@@ -23,9 +23,9 @@ python train_source_networks.py --dataset=<dataset> --arch=<architecture> --batc
 For the experiments, the following command was used:
 
 ```bash
-python train_source_networks.py --dataset=first5_mnist --arch=resnet18
-python train_source_networks.py --dataset=last5_mnist --arch=resnet18
-python train_source_networks.py --dataset=mnist --arch=resnet18
+python train_source_networks.py --dataset=first5_mnist --arch=lenet5
+python train_source_networks.py --dataset=last5_mnist --arch=lenet5
+python train_source_networks.py --dataset=mnist --arch=lenet5
 python train_source_networks.py --dataset=cifar10 --arch=resnet18
 python train_source_networks.py --dataset=fmnist --arch=resnet18
 python train_source_networks.py --dataset=kmnist --arch=resnet18
