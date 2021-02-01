@@ -73,7 +73,7 @@ def eval_upan(args, upan, all_experts_output, device):
     return fpan_target
 
 
-def create_train_loader(args, device, experts, upan, train_loader):
+def create_train_loader(args, device, all_experts, upan, train_loader):
     print("Obtaining FPAN training set:")
     # Using input data of the first dataloader as input data of FPAN
     fpan_input = []
@@ -83,7 +83,7 @@ def create_train_loader(args, device, experts, upan, train_loader):
 
     # Feed data to each expert to collect their output logits
     all_experts_output = []
-    for expert_idx, expert in enumerate(experts):
+    for expert_idx, expert in enumerate(all_experts):
         expert_output = eval_expert(
             args,
             expert_idx,
@@ -170,7 +170,7 @@ def train_model(fpan, trial, device, expert_arch, train_loader, test_loader, tar
     optimizer = optim.SGD(fpan.parameters(), lr=config_args.lr, momentum=config_args.momentum)
 
     # Load experts
-    experts = []
+    all_experts = []
     for expert_idx in range(len(expert_arch)):
         expert = expert_arch[expert_idx](
             input_channel=args.expert_input_channel[expert_idx], output_size=args.expert_output_size
@@ -182,7 +182,7 @@ def train_model(fpan, trial, device, expert_arch, train_loader, test_loader, tar
                 map_location=torch.device(device),
             )
         )
-        experts.append(expert)
+        all_experts.append(expert)
 
     # Load UPAN model
     if args.upan_type == "logits":
@@ -202,7 +202,7 @@ def train_model(fpan, trial, device, expert_arch, train_loader, test_loader, tar
     )
 
     # Initialise dataloaders of FPAN
-    fpan_train_loader = create_train_loader(args, device, experts, upan, train_loader)
+    fpan_train_loader = create_train_loader(args, device, all_experts, upan, train_loader)
     fpan_test_loader = create_test_loader(args, device, test_loader, target_create_fn)
 
     for epoch in range(1, config_args.epochs + 1):
@@ -236,6 +236,9 @@ def train_fpan(args):
         fpan_output_size = 2
         fpan_input_channel = 1
     elif args.fpan_data == "mnist_cifar10":
+        # DELETE THIS COMMENT WHEN SUBMITTING
+        # CIFAR10 is converted into single channel, instead of converting MNIST into RGB,
+        # otherwise FPAN can just easily distinguish by recognizing the colour of the image.
         train_loaders = [
             mnist_cifar10_single_channel_train_loader_noshuffle(args.batch_size),
             mnist_cifar10_3_channel_train_loader_noshuffle(args.batch_size),
