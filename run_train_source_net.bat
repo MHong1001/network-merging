@@ -1,12 +1,12 @@
 call .venv/Scripts/activate
 
-python train_source_networks.py --dataset=first5_mnist --arch=lenet5
-python train_source_networks.py --dataset=last5_mnist --arch=lenet5
+python train_source_networks.py --dataset=first5_mnist --arch=lenet5 &
+python train_source_networks.py --dataset=last5_mnist --arch=lenet5 &
 
-python train_source_networks.py --dataset=mnist --arch=lenet5
-python train_source_networks.py --dataset=cifar10 --arch=resnet18
+python train_source_networks.py --dataset=mnist --arch=lenet5 &
+python train_source_networks.py --dataset=cifar10 --arch=resnet18 &
 
-python train_source_networks.py --dataset=fmnist --arch=resnet18
+python train_source_networks.py --dataset=fmnist --arch=resnet18 &
 python train_source_networks.py --dataset=kmnist --arch=resnet18
 
 REM python train_source_networks.py --dataset=first5_mnist &
