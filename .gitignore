@@ -12,7 +12,8 @@ cache/
 # Results files
 results/
 
-# note
-NOTE (remove this in the final submission).txt
+# note (delete these in the final submission)
+NOTE.txt
+discovery.txt
 .tmp.drivedownload
 desktop.ini
