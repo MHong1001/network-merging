@@ -175,10 +175,11 @@ def train_main(args):
         )
 
         # Save the model
-        torch.save(
-            model.state_dict(),
-            args.output_dir + f"{args.dataset}(wrong pct={args.wrong_target_pct})_{args.arch}_{args.seeds[i]}",
-        )
+        if args.save_models:
+            torch.save(
+                model.state_dict(),
+                args.output_dir + f"{args.dataset}(wrong pct={args.wrong_target_pct})_{args.arch}_{args.seeds[i]}",
+            )
 
         # Save the results in list first
         results.append(
@@ -213,6 +214,7 @@ if __name__ == "__main__":
     parser.add_argument("--no_cuda", type=bool, default=Config.no_cuda)
     parser.add_argument("--log_interval", type=int, default=Config.log_interval)
     parser.add_argument("--save_results", type=bool, default=Config.save_results)
+    parser.add_argument("--save_models", type=bool, default=False)
     parser.add_argument("--results_dir", type=str, default="./results/experiments/source_net_trained_with_wrong_labelled_data/")
     parser.add_argument("--output_dir", type=str, default="./cache/models/experiments/source_net_trained_with_wrong_labelled_data/")
 
