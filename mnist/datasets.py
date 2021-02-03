@@ -22,7 +22,7 @@ class DisjointMNIST(MNIST):
             "9 - nine",
         ]
         # Slicing begins here
-        classes = classes[start_idx:end_idx]
+        self.classes = classes[start_idx:end_idx]
         sliced_labels_idx = [
             i
             for i in range(len(self.targets))
@@ -121,63 +121,63 @@ mnist_combined_test_dataset = MNIST(
 
 
 # Extras here
-mnist_6_7_train_dataset = DisjointMNIST(
-    DATA_DIR,
-    start_idx=6,
-    end_idx=8,
-    train=True,
-    download=True,
-    transform=transforms.Compose(
-        [
-            transforms.Pad(2),
-            transforms.ToTensor(),
-            transforms.Normalize((0.1307,), (0.3081,)),
-        ]
-    ),
-)
+# mnist_6_7_train_dataset = DisjointMNIST(
+#     DATA_DIR,
+#     start_idx=6,
+#     end_idx=8,
+#     train=True,
+#     download=True,
+#     transform=transforms.Compose(
+#         [
+#             transforms.Pad(2),
+#             transforms.ToTensor(),
+#             transforms.Normalize((0.1307,), (0.3081,)),
+#         ]
+#     ),
+# )
 
-mnist_6_7_test_dataset = DisjointMNIST(
-    DATA_DIR,
-    start_idx=6,
-    end_idx=8,
-    train=False,
-    download=True,
-    transform=transforms.Compose(
-        [
-            transforms.Pad(2),
-            transforms.ToTensor(),
-            transforms.Normalize((0.1307,), (0.3081,)),
-        ]
-    ),
-)
+# mnist_6_7_test_dataset = DisjointMNIST(
+#     DATA_DIR,
+#     start_idx=6,
+#     end_idx=8,
+#     train=False,
+#     download=True,
+#     transform=transforms.Compose(
+#         [
+#             transforms.Pad(2),
+#             transforms.ToTensor(),
+#             transforms.Normalize((0.1307,), (0.3081,)),
+#         ]
+#     ),
+# )
 
 
-mnist_8_9_train_dataset = DisjointMNIST(
-    DATA_DIR,
-    start_idx=8,
-    end_idx=10,
-    train=True,
-    download=True,
-    transform=transforms.Compose(
-        [
-            transforms.Pad(2),
-            transforms.ToTensor(),
-            transforms.Normalize((0.1307,), (0.3081,)),
-        ]
-    ),
-)
+# mnist_8_9_train_dataset = DisjointMNIST(
+#     DATA_DIR,
+#     start_idx=8,
+#     end_idx=10,
+#     train=True,
+#     download=True,
+#     transform=transforms.Compose(
+#         [
+#             transforms.Pad(2),
+#             transforms.ToTensor(),
+#             transforms.Normalize((0.1307,), (0.3081,)),
+#         ]
+#     ),
+# )
 
-mnist_8_9_test_dataset = DisjointMNIST(
-    DATA_DIR,
-    start_idx=8,
-    end_idx=10,
-    train=False,
-    download=True,
-    transform=transforms.Compose(
-        [
-            transforms.Pad(2),
-            transforms.ToTensor(),
-            transforms.Normalize((0.1307,), (0.3081,)),
-        ]
-    ),
-)
+# mnist_8_9_test_dataset = DisjointMNIST(
+#     DATA_DIR,
+#     start_idx=8,
+#     end_idx=10,
+#     train=False,
+#     download=True,
+#     transform=transforms.Compose(
+#         [
+#             transforms.Pad(2),
+#             transforms.ToTensor(),
+#             transforms.Normalize((0.1307,), (0.3081,)),
+#         ]
+#     ),
+# )
