@@ -116,7 +116,7 @@ def create_test_loader(args, trial, test_arch, device, test_loader, test_target_
         )
         del expert
 
-        print(upan_test_loader[expert_idx][-1:])
+        # print(upan_test_loader[expert_idx][-1:])
 
     return upan_test_loader
 
@@ -240,7 +240,7 @@ def train_upan(args):
         args.train_expert = ["mnist", "cifar10"]
         args.train_input_channel = [1, 3]
         args.train_output_size = 10
-        args.train_arch = ["resnet18", "resnet18"]
+        args.train_arch = ["lenet5", "resnet18"]
         train_arch = [LeNet5, ResNet18]
         target_create_fns = [craft_mnist_target, craft_cifar10_target]
     elif args.dataset == "fmnist_kmnist":
@@ -295,7 +295,7 @@ def train_upan(args):
         upan_input_size = args.train_output_size # output size of expert
         upan_arch = PAN
     elif args.upan_type == "agnostic_logits":
-        upan_input_size = 4 # number of statistical functions used
+        upan_input_size = 3 # number of statistical functions used
         upan_arch = AgnosticPAN
 
     # Create the directory for saving if it does not exist
