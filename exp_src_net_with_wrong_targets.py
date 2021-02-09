@@ -215,8 +215,8 @@ if __name__ == "__main__":
     parser.add_argument("--log_interval", type=int, default=Config.log_interval)
     parser.add_argument("--save_results", type=bool, default=Config.save_results)
     parser.add_argument("--save_models", type=bool, default=False)
-    parser.add_argument("--results_dir", type=str, default="./results/experiments/source_net_trained_with_wrong_labelled_data/")
-    parser.add_argument("--output_dir", type=str, default="./cache/models/experiments/source_net_trained_with_wrong_labelled_data/")
+    parser.add_argument("--results_dir", type=str, default="./results/experiments/source_net_trained_with_wrong_targets/")
+    parser.add_argument("--output_dir", type=str, default="./cache/models/experiments/source_net_trained_with_wrong_targets/")
 
     args = parser.parse_args()
     args.seeds = SEEDS
