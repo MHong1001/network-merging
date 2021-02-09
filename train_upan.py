@@ -295,7 +295,7 @@ def train_upan(args):
         upan_input_size = args.train_output_size # output size of expert
         upan_arch = PAN
     elif args.upan_type == "agnostic_logits":
-        upan_input_size = 3 # number of statistical functions used
+        upan_input_size = 4 # number of statistical functions used
         upan_arch = AgnosticPAN
 
     # Create the directory for saving if it does not exist
