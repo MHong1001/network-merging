@@ -236,9 +236,6 @@ def train_fpan(args):
         fpan_output_size = 2
         fpan_input_channel = 1
     elif args.fpan_data == "mnist_cifar10":
-        # DELETE THIS COMMENT WHEN SUBMITTING
-        # CIFAR10 is converted into single channel, instead of converting MNIST into RGB,
-        # otherwise FPAN can just easily distinguish by recognizing the colour of the image.
         train_loaders = [
             mnist_cifar10_single_channel_train_loader_noshuffle(args.batch_size),
             mnist_cifar10_3_channel_train_loader_noshuffle(args.batch_size),
