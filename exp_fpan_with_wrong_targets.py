@@ -154,7 +154,8 @@ def train_fpan(args):
     create_op_dir(args.output_dir)
 
     print(f"\nFPAN Dataset: {args.fpan_data}")
-    print(f"FPAN arch: {args.fpan_arch}\n")
+    print(f"FPAN arch: {args.fpan_arch}")
+    print(f"Wrong Targets Percentage: {args.wrong_target_pct}\n")
 
     fpan_results = []
     for i in range(len(args.seeds)):
