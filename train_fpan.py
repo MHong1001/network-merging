@@ -189,7 +189,7 @@ def train_model(fpan, trial, device, expert_arch, train_loader, test_loader, tar
         upan_input_size = args.model_output_size
         upan_arch = PAN
     elif args.upan_type == "agnostic_logits":
-        upan_input_size = 3
+        upan_input_size = 4
         upan_arch = AgnosticPAN
 
     upan = upan_arch(input_size=upan_input_size).to(device)
@@ -230,8 +230,8 @@ def train_fpan(args):
         args.expert = ["first5_mnist", "last5_mnist"]
         args.expert_input_channel = [1, 1]
         args.expert_output_size = 5
-        args.expert_arch = ["resnet18", "resnet18"]
-        expert_arch = [ResNet18, ResNet18]
+        args.expert_arch = ["lenet5", "lenet5"]
+        expert_arch = [LeNet5, LeNet5]
         target_create_fns = craft_disjoint_mnist_target
         fpan_output_size = 2
         fpan_input_channel = 1
@@ -244,8 +244,8 @@ def train_fpan(args):
         args.expert = ["mnist", "cifar10"]
         args.expert_input_channel = [1, 3]
         args.expert_output_size = 10
-        args.expert_arch = ["resnet18", "resnet18"]
-        expert_arch = [ResNet18, ResNet18]
+        args.expert_arch = ["lenet5", "resnet18"]
+        expert_arch = [LeNet5, ResNet18]
         target_create_fns = craft_mnist_cifar10_target
         fpan_output_size = 2
         fpan_input_channel = 1
@@ -273,10 +273,10 @@ def train_fpan(args):
 
     # Initialize arguments based on the dataset that UPAN was trained on
     if args.upan_data == "disjoint_mnist":
-        args.model_arch = ["resnet18", "resnet18"]
+        args.model_arch = ["lenet5", "lenet5"]
         args.model_output_size = 5
     elif args.upan_data == "mnist_cifar10":
-        args.model_arch = ["resnet18", "resnet18"]
+        args.model_arch = ["lenet5", "resnet18"]
         args.model_output_size = 10
     elif args.upan_data == "fmnist_kmnist":
         args.model_arch = ["resnet18", "resnet18"]
